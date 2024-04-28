@@ -11,7 +11,10 @@
 		"MultiBarBottomLeft",
 		"MultiBarLeft",
 		"MultiBarRight",
-		"MultiBarBottomRightButton5"
+		"MultiBarBottomRightButton5",
+		"ChatFrame1",
+		"ActionButton10",
+		"ActionButton10Cooldown"
 	],
 	"Lua.diagnostics.disable": [
 		"inject-field"

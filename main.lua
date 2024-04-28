@@ -42,9 +42,7 @@ end
 function ScaleBarButtons(buttonPrefix)
 	for i = 1, 12 do
 		local button = _G[buttonPrefix.."Button"..i]
-		if not button then
-			break
-		end
+		if not button then break end
 
 		-- Hide the button border
 		button.NormalTexture:SetAlpha(0)
@@ -62,7 +60,49 @@ function ScaleBarButtons(buttonPrefix)
 		ScaleAndCenter(button.PushedTexture, 1.1)
 
 		button:SetScale(1.14)
+
+		-- Not using OnShow because the cooldown is shown first for the gcd, then
+		-- the cd follows, without triggering OnShow.
+		-- button.cooldown:SetScript("OnShow", function(self)
+		-- 	local cd = button:GetCooldown()
+		-- 	if cd > 5 then
+		-- 		button.animate = true
+		-- 		button:SetAlpha(0)
+		-- 	end
+		-- end)
+
+		button.cooldown:SetScript("OnUpdate", function(self, elapsed)
+			local cd = button:GetCooldown()
+			if cd > 5 then
+				button.animate = true
+			end
+			if button.animate then
+				if cd > 5 then
+					button:SetAlpha(0)
+				else
+					button:SetAlpha(1)
+					button:SetPoint("CENTER", 0, cd * 20)
+				end
+			end
+		end)
+
+		button.cooldown:SetScript("OnHide", function(self)
+			button.animate = false
+			button:SetAlpha(1)
+			button:SetPoint("CENTER", 0, 0)
+		end)
+
+		function button:GetCooldown()
+			if not self.action then return 0 end
+			local start, duration, enable, modRate = GetActionCooldown(self.action)
+			if start <= 0 or duration <= 0 then return 0 end
+			return start + duration - GetTime()
+		end
+
 	end
+end
+
+function InitButton(button)
 end
 
 function ScaleAndCenter(button, scale)
