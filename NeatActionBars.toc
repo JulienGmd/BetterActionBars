@@ -1,0 +1,7 @@
+## Interface: 100206
+## Version: 0.1
+## Title: Neat Action Bars
+## Author: Me
+## SavedVariables: NeatActionBars
+
+main.lua

@@ -1,0 +1,19 @@
+{
+	"Lua.diagnostics.globals": [
+		"CreateFrame",
+		"_G",
+		"C_PaperDollInfo",
+		"string",
+		"hooksecurefunc",
+		"MainMenuBar",
+		"MultiBar5",
+		"MultiBarBottomRight",
+		"MultiBarBottomLeft",
+		"MultiBarLeft",
+		"MultiBarRight",
+		"MultiBarBottomRightButton5"
+	],
+	"Lua.diagnostics.disable": [
+		"inject-field"
+	]
+}
