@@ -33,6 +33,7 @@ end
 
 function InitHover(bar)
 	local showBars = false
+	local fadeOutTimer = nil
 
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
@@ -52,16 +53,38 @@ function InitHover(bar)
 	function SetShowBars(show)
 		if showBars == show then return end
 		showBars = show
+
+		if showBars then
+			CancelTimer(fadeOutTimer)
+			FadeInBars()
+		else
+			CancelTimer(fadeOutTimer)
+			fadeOutTimer = C_Timer.NewTimer(1, function()
+				if not showBars then
+					FadeOutBars()
+				end
+			end)
+		end
+	end
+
+	function FadeInBars()
 		for _, bar in pairs(EnhancedEditModeDB.actionBars) do
 			local barFrame = _G[bar.name]
-			if not barFrame then return end
-			if bar.onHover then
-				barFrame:SetAlpha(showBars and 1 or 0)
-			else
-				barFrame:SetAlpha(1)
+			if barFrame and barFrame:IsShown() then
+				UIFrameFadeIn(barFrame, .2, barFrame:GetAlpha(), 1)
 			end
 		end
 	end
+
+	function FadeOutBars()
+		for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+			local barFrame = _G[bar.name]
+			if barFrame and barFrame:IsShown() and bar.onHover then
+				UIFrameFadeOut(barFrame, .2, barFrame:GetAlpha(), 0)
+			end
+		end
+	end
+
 end
 
 function InitAnimations(bar)
@@ -153,4 +176,11 @@ function ScaleAndCenter(button, scale)
 	button:SetScale(scale)
 	button:ClearAllPoints()
 	button:SetPoint("CENTER", 0, 0)
+end
+
+function CancelTimer(timer)
+	if timer then
+		timer:Cancel()
+		timer = nil
+	end
 end
