@@ -1,6 +1,8 @@
+ADDON_NAME = "EnhancedEditMode"
+
+
 ----- Initialization -----------------------------------------------------------
 
-ADDON_NAME = "EnhancedEditMode"
 f = CreateFrame("Frame")
 
 function f:OnEvent(event, ...)
@@ -21,28 +23,46 @@ end
 ----- Utils --------------------------------------------------------------------
 
 function Init()
-	local bars = {
-		"Action",
-		"MultiBarBottomLeft",
-		"MultiBarBottomRight",
-		"MultiBarLeft",
-		"MultiBarRight",
-		"MultiBar5",
-		"MultiBar6",
-		"MultiBar7",
-		"Stance",
-	}
-	for _, bar in ipairs(bars) do
+	for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+		InitHover(bar)
 		InitAnimations(bar)
 		OnScaleChanged(bar)
 		OnHideBorderChanged(bar)
 	end
 end
 
+function InitHover(bar)
+	local showBars = false
+
+	for i = 1, 12 do
+		local button = _G[bar.buttonPrefix .. "Button" .. i]
+		if not button then return end
+		button:SetScript("OnEnter", function(self)
+			SetShowBars(true)
+		end)
+		button:SetScript("OnLeave", function(self)
+			SetShowBars(false)
+		end)
+	end
+
+	function SetShowBars(show)
+		if showBars == show then return end
+		showBars = show
+		for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+			local barFrame = _G[bar.name]
+			if not barFrame then return end
+			if bar.onHover then
+				barFrame:SetAlpha(showBars and 1 or 0)
+			else
+				barFrame:SetAlpha(1)
+			end
+		end
+	end
+end
+
 function InitAnimations(bar)
 	for i = 1, 12 do
-		local bs = EnhancedEditModeDB.actionBars[bar]
-		local button = _G[bar.."Button"..i]
+		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
 
 		-- Note: Not using OnShow because it is triggered by the gcd, hiding the cd.
@@ -58,16 +78,16 @@ function InitAnimations(bar)
 					button:SetAlpha(1)
 					local x = 0
 					local y = 0
-					if bs.animateDir == BarAnimType.slideFromBottom then
+					if bar.animType == BarAnimType.slideFromBottom then
 						x = 0
 						y = -cd * 20
-					elseif bs.animateDir == BarAnimType.slideFromTop then
+					elseif bar.animType == BarAnimType.slideFromTop then
 						x = 0
 						y = cd * 20
-					elseif bs.animateDir == BarAnimType.slideFromLeft then
+					elseif bar.animType == BarAnimType.slideFromLeft then
 						x = -cd * 20
 						y = 0
-					elseif bs.animateDir == BarAnimType.slideFromRight then
+					elseif bar.animType == BarAnimType.slideFromRight then
 						x = cd * 20
 						y = 0
 					end
@@ -92,31 +112,32 @@ function InitAnimations(bar)
 end
 
 function OnScaleChanged(bar)
-	local bs = EnhancedEditModeDB.actionBars[bar]
 	for i = 1, 12 do
-		local button = _G[bar.."Button"..i]
+		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
-		button:SetScale(bs.scale)
+		button:SetScale(bar.scale)
 	end
 end
 
 function OnHideBorderChanged(bar)
-	local bs = EnhancedEditModeDB.actionBars[bar]
 	for i = 1, 12 do
-		local button = _G[bar.."Button"..i]
+		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
 		-- Hide the button border
-		button.NormalTexture:SetAlpha(bs.hideBorder and 0 or 1)
-		button.PushedTexture:SetAlpha(bs.hideBorder and 0 or 1)
+		local value = bar.hideBorder and 0 or 1
+		button.NormalTexture:SetAlpha(value)
+		button.PushedTexture:SetAlpha(value)
 		-- Reduce the size of the icon mask to hide the icon border
-		button.IconMask:SetScale(bs.hideBorder and .95 or 1);
+		value = bar.hideBorder and .95 or 1
+		button.IconMask:SetScale(value);
 		-- Scale some overlay elements to fill the icon mask
-		ScaleAndCenter(button.Border, bs.hideBorder and 1.1 or 1)
-		ScaleAndCenter(button.CheckedTexture, bs.hideBorder and 1.1 or 1)
-		ScaleAndCenter(button.Flash, bs.hideBorder and 1.1 or 1)
-		ScaleAndCenter(button.HighlightTexture, bs.hideBorder and 1.1 or 1)
-		ScaleAndCenter(button.NewActionTexture, bs.hideBorder and 1.1 or 1)
-		ScaleAndCenter(button.PushedTexture, bs.hideBorder and 1.1 or 1)
+		value = bar.hideBorder and 1.1 or 1
+		ScaleAndCenter(button.Border, value)
+		ScaleAndCenter(button.CheckedTexture, value)
+		ScaleAndCenter(button.Flash, value)
+		ScaleAndCenter(button.HighlightTexture, value)
+		ScaleAndCenter(button.NewActionTexture, value)
+		ScaleAndCenter(button.PushedTexture, value)
 	end
 end
 
