@@ -37,10 +37,14 @@ function InitHover(bar)
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
+		local oldOnEnter = button:GetScript("OnEnter")
 		button:SetScript("OnEnter", function(self)
+			if oldOnEnter then oldOnEnter(self) end -- Call the original OnEnter
 			SetShowBars(true)
 		end)
+		local oldOnLeave = button:GetScript("OnLeave")
 		button:SetScript("OnLeave", function(self)
+			if oldOnLeave then oldOnLeave(self) end -- Call the original OnLeave
 			SetShowBars(false)
 		end)
 	end
@@ -66,7 +70,9 @@ function InitAnimations(bar)
 		if not button then return end
 
 		-- Note: Not using OnShow because it is triggered by the gcd, hiding the cd.
+		local oldOnUpdate = button:GetScript("OnUpdate")
 		button.cooldown:SetScript("OnUpdate", function(self, elapsed)
+			if oldOnUpdate then oldOnUpdate(self, elapsed) end -- Call the original OnUpdate
 			local cd = button:GetCooldown()
 			if cd > 5 then
 				button.animate = true
@@ -96,7 +102,9 @@ function InitAnimations(bar)
 			end
 		end)
 
+		local oldOnHide = button.cooldown:GetScript("OnHide")
 		button.cooldown:SetScript("OnHide", function(self)
+			if oldOnHide then oldOnHide(self) end -- Call the original OnHide
 			button.animate = false
 			button:SetAlpha(1)
 			button:SetPoint("CENTER", 0, 0)
