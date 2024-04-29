@@ -10,6 +10,7 @@ function f:OnEvent(event, ...)
 end
 
 f:RegisterEvent("ADDON_LOADED")
+f:RegisterEvent("PLAYER_TARGET_CHANGED")
 f:SetScript("OnEvent", f.OnEvent)
 
 function f:ADDON_LOADED(event, addon)
@@ -20,69 +21,85 @@ function f:ADDON_LOADED(event, addon)
 	end
 end
 
+function f:PLAYER_TARGET_CHANGED(event)
+	for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+		if bar.onTarget then
+			bar.showLevel = bar.showLevel + (UnitExists("target") and 1 or -1)
+			OnShowLevelChanged(bar)
+		end
+	end
+end
+
+
 ----- Utils --------------------------------------------------------------------
 
 function Init()
 	for _, bar in pairs(EnhancedEditModeDB.actionBars) do
-		InitHover(bar)
+		InitFade(bar)
 		InitAnimations(bar)
 		OnScaleChanged(bar)
 		OnHideBorderChanged(bar)
 	end
 end
 
-function InitHover(bar)
-	local showBars = false
-	local fadeOutTimer = nil
+function InitFade(bar)
 
+	function OnShowLevelChanged(bar)
+		if bar.showLevel > 0 then
+			CancelTimer(bar.fadeOutTimer)
+			FadeIn(bar)
+		else
+			CancelTimer(bar.fadeOutTimer)
+			bar.fadeOutTimer = C_Timer.NewTimer(1, function()
+				if bar.showLevel <= 0 then
+					FadeOut(bar)
+				end
+			end)
+		end
+	end
+
+	function FadeIn(bar)
+		local barFrame = _G[bar.name]
+		if barFrame and barFrame:IsShown() then
+			UIFrameFadeIn(barFrame, .2, barFrame:GetAlpha(), 1)
+		end
+	end
+
+	function FadeOut(bar)
+		local barFrame = _G[bar.name]
+		if barFrame and barFrame:IsShown() then
+			UIFrameFadeOut(barFrame, .2, barFrame:GetAlpha(), 0)
+		end
+	end
+
+	bar.fadeOutTimer = nil
+	bar.showLevel = (bar.onHover or bar.onTarget) and 0 or 1
+	OnShowLevelChanged(bar)
+
+	-- onHover: Bind OnEnter/OnLeave events of the buttons
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
 		local oldOnEnter = button:GetScript("OnEnter")
 		button:SetScript("OnEnter", function(self)
 			if oldOnEnter then oldOnEnter(self) end -- Call the original OnEnter
-			SetShowBars(true)
+			for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+				if bar.onHover then
+					bar.showLevel = bar.showLevel + 1
+					OnShowLevelChanged(bar)
+				end
+			end
 		end)
 		local oldOnLeave = button:GetScript("OnLeave")
 		button:SetScript("OnLeave", function(self)
 			if oldOnLeave then oldOnLeave(self) end -- Call the original OnLeave
-			SetShowBars(false)
-		end)
-	end
-
-	function SetShowBars(show)
-		if showBars == show then return end
-		showBars = show
-
-		if showBars then
-			CancelTimer(fadeOutTimer)
-			FadeInBars()
-		else
-			CancelTimer(fadeOutTimer)
-			fadeOutTimer = C_Timer.NewTimer(1, function()
-				if not showBars then
-					FadeOutBars()
+			for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+				if bar.onHover then
+					bar.showLevel = bar.showLevel - 1
+					OnShowLevelChanged(bar)
 				end
-			end)
-		end
-	end
-
-	function FadeInBars()
-		for _, bar in pairs(EnhancedEditModeDB.actionBars) do
-			local barFrame = _G[bar.name]
-			if barFrame and barFrame:IsShown() then
-				UIFrameFadeIn(barFrame, .2, barFrame:GetAlpha(), 1)
 			end
-		end
-	end
-
-	function FadeOutBars()
-		for _, bar in pairs(EnhancedEditModeDB.actionBars) do
-			local barFrame = _G[bar.name]
-			if barFrame and barFrame:IsShown() and bar.onHover then
-				UIFrameFadeOut(barFrame, .2, barFrame:GetAlpha(), 0)
-			end
-		end
+		end)
 	end
 
 end
