@@ -1,8 +1,8 @@
 ## Interface: 100206
 ## Version: 0.1
-## Title: Neat Action Bars
+## Title: Enhanced Edit Mode
 ## Author: Me
-## SavedVariables: NeatActionBarsDB
+## SavedVariables: EnhancedEditModeDB
 
 main.lua
 options.lua

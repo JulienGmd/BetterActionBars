@@ -15,7 +15,8 @@
 		"ChatFrame1",
 		"ActionButton10",
 		"ActionButton10Cooldown",
-		"EditModeSystemSettingsDialog"
+		"EditModeSystemSettingsDialog",
+		"DEFAULT_CHAT_FRAME"
 	],
 	"Lua.diagnostics.disable": [
 		"inject-field"

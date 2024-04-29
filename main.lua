@@ -1,6 +1,6 @@
 ----- Initialization -----------------------------------------------------------
 
-ADDON_NAME = "NeatActionBars"
+ADDON_NAME = "EnhancedEditMode"
 f = CreateFrame("Frame")
 
 function f:OnEvent(event, ...)
@@ -41,7 +41,7 @@ end
 
 function InitAnimations(bar)
 	for i = 1, 12 do
-		local bs = NeatActionBarsDB.actionBars[bar]
+		local bs = EnhancedEditModeDB.actionBars[bar]
 		local button = _G[bar.."Button"..i]
 		if not button then return end
 
@@ -92,7 +92,7 @@ function InitAnimations(bar)
 end
 
 function OnScaleChanged(bar)
-	local bs = NeatActionBarsDB.actionBars[bar]
+	local bs = EnhancedEditModeDB.actionBars[bar]
 	for i = 1, 12 do
 		local button = _G[bar.."Button"..i]
 		if not button then return end
@@ -101,7 +101,7 @@ function OnScaleChanged(bar)
 end
 
 function OnHideBorderChanged(bar)
-	local bs = NeatActionBarsDB.actionBars[bar]
+	local bs = EnhancedEditModeDB.actionBars[bar]
 	for i = 1, 12 do
 		local button = _G[bar.."Button"..i]
 		if not button then return end

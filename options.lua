@@ -57,13 +57,13 @@ f.defaults = {
 }
 
 function f:LoadSavedVars()
-	-- NeatActionBarsDB is set by WoW if the file exists (see toc file).
-	NeatActionBarsDB = NeatActionBarsDB or {}
+	-- EnhancedEditModeDB is set by WoW if the file exists (see toc file).
+	EnhancedEditModeDB = EnhancedEditModeDB or {}
 	-- Set defaults for missing values (first load or new options added).
 	-- TODO recursive
 	for k, v in pairs(f.defaults) do
-		if NeatActionBarsDB[k] == nil then
-			NeatActionBarsDB[k] = v
+		if EnhancedEditModeDB[k] == nil then
+			EnhancedEditModeDB[k] = v
 		end
 	end
 end
