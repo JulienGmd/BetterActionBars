@@ -11,7 +11,7 @@ end
 
 f:RegisterEvent("ADDON_LOADED")
 f:RegisterEvent("PLAYER_TARGET_CHANGED")
-f:SetScript("OnEvent", f.OnEvent)
+f:HookScript("OnEvent", f.OnEvent)
 
 function f:ADDON_LOADED(event, addon)
 	if addon == ADDON_NAME then
@@ -21,10 +21,13 @@ function f:ADDON_LOADED(event, addon)
 	end
 end
 
+local hasTarget = false
 function f:PLAYER_TARGET_CHANGED(event)
+	if hasTarget == UnitExists("target") then return end
+	hasTarget = UnitExists("target")
 	for _, bar in pairs(EnhancedEditModeDB.actionBars) do
 		if bar.onTarget then
-			bar.showLevel = bar.showLevel + (UnitExists("target") and 1 or -1)
+			bar.showLevel = bar.showLevel + (hasTarget and 1 or -1)
 			OnShowLevelChanged(bar)
 		end
 	end
@@ -45,6 +48,7 @@ end
 function InitFade(bar)
 
 	function OnShowLevelChanged(bar)
+		-- print(bar.name, bar.showLevel)
 		if bar.showLevel > 0 then
 			CancelTimer(bar.fadeOutTimer)
 			FadeIn(bar)
@@ -80,9 +84,7 @@ function InitFade(bar)
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
-		local oldOnEnter = button:GetScript("OnEnter")
-		button:SetScript("OnEnter", function(self)
-			if oldOnEnter then oldOnEnter(self) end -- Call the original OnEnter
+		button:HookScript("OnEnter", function(self)
 			for _, bar in pairs(EnhancedEditModeDB.actionBars) do
 				if bar.onHover then
 					bar.showLevel = bar.showLevel + 1
@@ -90,9 +92,7 @@ function InitFade(bar)
 				end
 			end
 		end)
-		local oldOnLeave = button:GetScript("OnLeave")
-		button:SetScript("OnLeave", function(self)
-			if oldOnLeave then oldOnLeave(self) end -- Call the original OnLeave
+		button:HookScript("OnLeave", function(self)
 			for _, bar in pairs(EnhancedEditModeDB.actionBars) do
 				if bar.onHover then
 					bar.showLevel = bar.showLevel - 1
@@ -110,9 +110,7 @@ function InitAnimations(bar)
 		if not button then return end
 
 		-- Note: Not using OnShow because it is triggered by the gcd, hiding the cd.
-		local oldOnUpdate = button:GetScript("OnUpdate")
-		button.cooldown:SetScript("OnUpdate", function(self, elapsed)
-			if oldOnUpdate then oldOnUpdate(self, elapsed) end -- Call the original OnUpdate
+		button.cooldown:HookScript("OnUpdate", function(self, elapsed)
 			local cd = button:GetCooldown()
 			if cd > 5 then
 				button.animate = true
@@ -142,9 +140,7 @@ function InitAnimations(bar)
 			end
 		end)
 
-		local oldOnHide = button.cooldown:GetScript("OnHide")
-		button.cooldown:SetScript("OnHide", function(self)
-			if oldOnHide then oldOnHide(self) end -- Call the original OnHide
+		button.cooldown:HookScript("OnHide", function(self)
 			button.animate = false
 			button:SetAlpha(1)
 			button:SetPoint("CENTER", 0, 0)
