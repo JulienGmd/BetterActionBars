@@ -14,7 +14,8 @@
 		"MultiBarBottomRightButton5",
 		"ChatFrame1",
 		"ActionButton10",
-		"ActionButton10Cooldown"
+		"ActionButton10Cooldown",
+		"EditModeSystemSettingsDialog"
 	],
 	"Lua.diagnostics.disable": [
 		"inject-field"

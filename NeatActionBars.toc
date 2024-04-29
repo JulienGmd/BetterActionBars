@@ -2,6 +2,7 @@
 ## Version: 0.1
 ## Title: Neat Action Bars
 ## Author: Me
-## SavedVariables: NeatActionBars
+## SavedVariables: NeatActionBarsDB
 
 main.lua
+options.lua

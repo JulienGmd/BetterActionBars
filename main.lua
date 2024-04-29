@@ -1,9 +1,7 @@
-print("main.lua loaded")
-
 ----- Initialization -----------------------------------------------------------
 
-local ADDON_NAME = "NeatActionBars"
-local f = CreateFrame("Frame")
+ADDON_NAME = "NeatActionBars"
+f = CreateFrame("Frame")
 
 function f:OnEvent(event, ...)
 	self[event](self, event, ...)
@@ -14,8 +12,8 @@ f:SetScript("OnEvent", f.OnEvent)
 
 function f:ADDON_LOADED(event, addon)
 	if addon == ADDON_NAME then
-		self:UnregisterEvent("ADDON_LOADED")
-		self.ADDON_LOADED = nil
+		f:UnregisterEvent("ADDON_LOADED")
+		f:LoadSavedVars()
 		Init()
 	end
 end
@@ -23,7 +21,7 @@ end
 ----- Utils --------------------------------------------------------------------
 
 function Init()
-	local buttonPrefixes = {
+	local bars = {
 		"Action",
 		"MultiBarBottomLeft",
 		"MultiBarBottomRight",
@@ -34,62 +32,91 @@ function Init()
 		"MultiBar7",
 		"Stance",
 	}
-	for _, buttonPrefix in ipairs(buttonPrefixes) do
-		for i = 1, 12 do
-			InitButton(_G[buttonPrefix.."Button"..i])
+	for _, bar in ipairs(bars) do
+		InitAnimations(bar)
+		OnScaleChanged(bar)
+		OnHideBorderChanged(bar)
+	end
+end
+
+function InitAnimations(bar)
+	for i = 1, 12 do
+		local bs = NeatActionBarsDB.actionBars[bar]
+		local button = _G[bar.."Button"..i]
+		if not button then return end
+
+		-- Note: Not using OnShow because it is triggered by the gcd, hiding the cd.
+		button.cooldown:SetScript("OnUpdate", function(self, elapsed)
+			local cd = button:GetCooldown()
+			if cd > 5 then
+				button.animate = true
+			end
+			if button.animate then
+				if cd > 5 then
+					button:SetAlpha(0)
+				else
+					button:SetAlpha(1)
+					local x = 0
+					local y = 0
+					if bs.animateDir == BarAnimType.slideFromBottom then
+						x = 0
+						y = -cd * 20
+					elseif bs.animateDir == BarAnimType.slideFromTop then
+						x = 0
+						y = cd * 20
+					elseif bs.animateDir == BarAnimType.slideFromLeft then
+						x = -cd * 20
+						y = 0
+					elseif bs.animateDir == BarAnimType.slideFromRight then
+						x = cd * 20
+						y = 0
+					end
+					button:SetPoint("CENTER", x, y)
+				end
+			end
+		end)
+
+		button.cooldown:SetScript("OnHide", function(self)
+			button.animate = false
+			button:SetAlpha(1)
+			button:SetPoint("CENTER", 0, 0)
+		end)
+
+		function button:GetCooldown()
+			if not self.action then return 0 end
+			local start, duration, _, _ = GetActionCooldown(self.action)
+			if start <= 0 or duration <= 0 then return 0 end
+			return start + duration - GetTime()
 		end
 	end
 end
 
-function InitButton(button)
-	if not button then return end
+function OnScaleChanged(bar)
+	local bs = NeatActionBarsDB.actionBars[bar]
+	for i = 1, 12 do
+		local button = _G[bar.."Button"..i]
+		if not button then return end
+		button:SetScale(bs.scale)
+	end
+end
 
-	button:SetScale(1.14)
-
-	-- Hide the button border
-	button.NormalTexture:SetAlpha(0)
-	button.PushedTexture:SetAlpha(0)
-
-	-- Reduce the size of the icon mask to hide the icon border
-	button.IconMask:SetScale(.95);
-
-	-- Scale some overlay elements to fill the icon mask
-	ScaleAndCenter(button.Border, 1.1)
-	ScaleAndCenter(button.CheckedTexture, 1.1)
-	ScaleAndCenter(button.Flash, 1.1)
-	ScaleAndCenter(button.HighlightTexture, 1.1)
-	ScaleAndCenter(button.NewActionTexture, 1.1)
-	ScaleAndCenter(button.PushedTexture, 1.1)
-
-	-- Animations
-
-	-- Note: Not using OnShow because it is triggered by the gcd, hiding the cd.
-	button.cooldown:SetScript("OnUpdate", function(self, elapsed)
-		local cd = button:GetCooldown()
-		if cd > 5 then
-			button.animate = true
-		end
-		if button.animate then
-			if cd > 5 then
-				button:SetAlpha(0)
-			else
-				button:SetAlpha(1)
-				button:SetPoint("CENTER", 0, cd * 20)
-			end
-		end
-	end)
-
-	button.cooldown:SetScript("OnHide", function(self)
-		button.animate = false
-		button:SetAlpha(1)
-		button:SetPoint("CENTER", 0, 0)
-	end)
-
-	function button:GetCooldown()
-		if not self.action then return 0 end
-		local start, duration, _, _ = GetActionCooldown(self.action)
-		if start <= 0 or duration <= 0 then return 0 end
-		return start + duration - GetTime()
+function OnHideBorderChanged(bar)
+	local bs = NeatActionBarsDB.actionBars[bar]
+	for i = 1, 12 do
+		local button = _G[bar.."Button"..i]
+		if not button then return end
+		-- Hide the button border
+		button.NormalTexture:SetAlpha(bs.hideBorder and 0 or 1)
+		button.PushedTexture:SetAlpha(bs.hideBorder and 0 or 1)
+		-- Reduce the size of the icon mask to hide the icon border
+		button.IconMask:SetScale(bs.hideBorder and .95 or 1);
+		-- Scale some overlay elements to fill the icon mask
+		ScaleAndCenter(button.Border, bs.hideBorder and 1.1 or 1)
+		ScaleAndCenter(button.CheckedTexture, bs.hideBorder and 1.1 or 1)
+		ScaleAndCenter(button.Flash, bs.hideBorder and 1.1 or 1)
+		ScaleAndCenter(button.HighlightTexture, bs.hideBorder and 1.1 or 1)
+		ScaleAndCenter(button.NewActionTexture, bs.hideBorder and 1.1 or 1)
+		ScaleAndCenter(button.PushedTexture, bs.hideBorder and 1.1 or 1)
 	end
 end
 
