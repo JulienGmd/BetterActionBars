@@ -117,9 +117,18 @@ function InitAnimations(bar)
 			end
 			if button.animate then
 				if cd > 5 then
-					button:SetAlpha(0)
+					button.icon:SetAlpha(0)
+					button.cooldown:SetAlpha(0)
+					if button.chargeCooldown then
+						button.chargeCooldown:SetAlpha(0)
+					end
+					if button.SpellActivationAlert then
+						button.SpellActivationAlert:SetAlpha(0)
+					end
+					if button.Count then
+						button.Count:SetAlpha(0)
+					end
 				else
-					button:SetAlpha(1)
 					local x = 0
 					local y = 0
 					if bar.animType == BarAnimType.slideFromBottom then
@@ -135,15 +144,49 @@ function InitAnimations(bar)
 						x = cd * 20
 						y = 0
 					end
-					button:SetPoint("CENTER", x, y)
+					-- Move button elements (disallowed to move button in combat)
+					button.icon:SetPoint("TOPLEFT", x, y)
+					button.icon:SetPoint("BOTTOMRIGHT", x, y)
+					button.icon:SetAlpha(1)
+					button.cooldown:SetPoint("CENTER", x, y)
+					button.cooldown:SetAlpha(1)
+					if button.chargeCooldown then
+						button.chargeCooldown:SetPoint("TOPLEFT", 2 + x, -2 + y)
+						button.chargeCooldown:SetPoint("BOTTOMRIGHT", -2 + x, 2 + y)
+						button.chargeCooldown:SetAlpha(1)
+					end
+					if button.SpellActivationAlert then
+						button.SpellActivationAlert:SetPoint("CENTER", x, y)
+						button.SpellActivationAlert:SetAlpha(1)
+					end
+					if button.Count then
+						button.Count:SetPoint("BOTTOMRIGHT", -5 + x, 5 + y)
+						button.Count:SetAlpha(1)
+					end
 				end
 			end
 		end)
 
 		button.cooldown:HookScript("OnHide", function(self)
 			button.animate = false
-			button:SetAlpha(1)
-			button:SetPoint("CENTER", 0, 0)
+			button.icon:SetPoint("TOPLEFT", 0, 0)
+			button.icon:SetPoint("BOTTOMRIGHT", 0, 0)
+			button.icon:SetAlpha(1)
+			button.cooldown:SetPoint("CENTER", 0, 0)
+			button.cooldown:SetAlpha(1)
+			if button.chargeCooldown then
+				button.chargeCooldown:SetPoint("TOPLEFT", 2, -2)
+				button.chargeCooldown:SetPoint("BOTTOMRIGHT", -2, 2)
+				button.chargeCooldown:SetAlpha(1)
+			end
+			if button.SpellActivationAlert then
+				button.SpellActivationAlert:SetPoint("CENTER", 0, 0)
+				button.SpellActivationAlert:SetAlpha(1)
+			end
+			if button.Count then
+				button.Count:SetPoint("BOTTOMRIGHT", -5, 5)
+				button.Count:SetAlpha(1)
+			end
 		end)
 
 		function button:GetCooldown()
