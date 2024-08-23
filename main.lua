@@ -1,4 +1,6 @@
-ADDON_NAME = "EnhancedEditMode"
+-- To get the version: /run print((select(4, GetBuildInfo())))
+
+ADDON_NAME = "BetterActionBars"
 
 
 ----- Initialization -----------------------------------------------------------
@@ -25,7 +27,7 @@ local hasTarget = false
 function f:PLAYER_TARGET_CHANGED(event)
 	if hasTarget == UnitExists("target") then return end
 	hasTarget = UnitExists("target")
-	for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+	for _, bar in pairs(BetterActionBarsDB.actionBars) do
 		if bar.onTarget then
 			bar.showLevel = bar.showLevel + (hasTarget and 1 or -1)
 			OnShowLevelChanged(bar)
@@ -37,11 +39,12 @@ end
 ----- Utils --------------------------------------------------------------------
 
 function Init()
-	for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+	for _, bar in pairs(BetterActionBarsDB.actionBars) do
 		InitFade(bar)
 		InitAnimations(bar)
 		OnScaleChanged(bar)
 		OnHideBorderChanged(bar)
+		OnReverseMultilineChanged(bar)
 	end
 end
 
@@ -85,7 +88,7 @@ function InitFade(bar)
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
 		button:HookScript("OnEnter", function(self)
-			for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+			for _, bar in pairs(BetterActionBarsDB.actionBars) do
 				if bar.onHover then
 					bar.showLevel = bar.showLevel + 1
 					OnShowLevelChanged(bar)
@@ -93,7 +96,7 @@ function InitFade(bar)
 			end
 		end)
 		button:HookScript("OnLeave", function(self)
-			for _, bar in pairs(EnhancedEditModeDB.actionBars) do
+			for _, bar in pairs(BetterActionBarsDB.actionBars) do
 				if bar.onHover then
 					bar.showLevel = bar.showLevel - 1
 					OnShowLevelChanged(bar)
@@ -226,6 +229,26 @@ function OnHideBorderChanged(bar)
 		ScaleAndCenter(button.NewActionTexture, value)
 		ScaleAndCenter(button.PushedTexture, value)
 	end
+end
+
+function OnReverseMultilineChanged(bar)
+	-- if not bar.reverseMultiline then return end -- requires /reload
+	-- -- TODO only work for 2 lines 12 buttons bars atm.
+	-- -- Get BOTTOMLEFT anchor point y value
+	-- local _, _, _, _, y = _G[bar.name .. "ButtonContainer7"]:GetPoint(1)
+	-- print("y: " .. y)
+	-- for i = 1, 12 do
+	-- 	local button = _G[bar.buttonPrefix .. "Button" .. i]
+	-- 	if not button then break end
+	-- 	local buttonContainer = _G[bar.name .. "ButtonContainer" .. i]
+	-- 	if i <= 6 then
+	-- 		print("(i - 1) * y", (i - 1) * y)
+	-- 		buttonContainer:SetPoint("BOTTOMLEFT", (i - 1) * y, y)
+	-- 	else
+	-- 		print("(i - 1 - 6) * y", (i - 1 - 6) * y)
+	-- 		buttonContainer:SetPoint("BOTTOMLEFT", (i - 1 - 6) * y, 0)
+	-- 	end
+	-- end
 end
 
 function ScaleAndCenter(button, scale)

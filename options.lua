@@ -16,6 +16,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromBottom,
 			onHover = true,
 			onTarget = true,
+			reverseMultiline = true,
 		},
 		MultiBarBottomLeft = {
 			name = "MultiBarBottomLeft",
@@ -25,6 +26,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = true,
+			reverseMultiline = false,
 		},
 		MultiBarBottomRight = {
 			name = "MultiBarBottomRight",
@@ -34,6 +36,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromBottom,
 			onHover = true,
 			onTarget = true,
+			reverseMultiline = false,
 		},
 		MultiBarRight = {
 			name = "MultiBarRight",
@@ -43,6 +46,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = true,
+			reverseMultiline = false,
 		},
 		MultiBarLeft = {
 			name = "MultiBarLeft",
@@ -52,6 +56,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromBottom,
 			onHover = true,
 			onTarget = true,
+			reverseMultiline = false,
 		},
 		MultiBar5 = {
 			name = "MultiBar5",
@@ -61,6 +66,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = false,
+			reverseMultiline = false,
 		},
 		MultiBar6 = {
 			name = "MultiBar6",
@@ -70,6 +76,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = false,
+			reverseMultiline = false,
 		},
 		MultiBar7 = {
 			name = "MultiBar7",
@@ -79,6 +86,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = false,
+			reverseMultiline = false,
 		},
 		Stance = {
 			name = "StanceBar",
@@ -88,23 +96,24 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = false,
+			reverseMultiline = false,
 		},
 	},
 }
 
 function f:LoadSavedVars()
-	EnhancedEditModeDB = f.defaults
+	BetterActionBarsDB = f.defaults
 end
 
 -- TODO settings panel
 -- function f:LoadSavedVars()
--- 	-- EnhancedEditModeDB is set by WoW if the file exists (see toc file).
--- 	EnhancedEditModeDB = EnhancedEditModeDB or {}
+-- 	-- BetterActionBarsDB is set by WoW if the file exists (see toc file).
+-- 	BetterActionBarsDB = BetterActionBarsDB or {}
 -- 	-- Set defaults for missing values (first load or new options added).
 -- 	-- TODO recursive
 -- 	for k, v in pairs(f.defaults) do
--- 		if EnhancedEditModeDB[k] == nil then
--- 			EnhancedEditModeDB[k] = v
+-- 		if BetterActionBarsDB[k] == nil then
+-- 			BetterActionBarsDB[k] = v
 -- 		end
 -- 	end
 -- end
