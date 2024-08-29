@@ -16,7 +16,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromBottom,
 			onHover = true,
 			onTarget = true,
-			reverseMultiline = true,
+			reverseGrowDir = true,
 		},
 		MultiBarBottomLeft = {
 			name = "MultiBarBottomLeft",
@@ -26,7 +26,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = true,
-			reverseMultiline = false,
+			reverseGrowDir = false,
 		},
 		MultiBarBottomRight = {
 			name = "MultiBarBottomRight",
@@ -36,7 +36,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromBottom,
 			onHover = true,
 			onTarget = true,
-			reverseMultiline = false,
+			reverseGrowDir = false,
 		},
 		MultiBarRight = {
 			name = "MultiBarRight",
@@ -46,7 +46,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = true,
-			reverseMultiline = false,
+			reverseGrowDir = false,
 		},
 		MultiBarLeft = {
 			name = "MultiBarLeft",
@@ -56,7 +56,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromBottom,
 			onHover = true,
 			onTarget = true,
-			reverseMultiline = false,
+			reverseGrowDir = false,
 		},
 		MultiBar5 = {
 			name = "MultiBar5",
@@ -66,7 +66,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = false,
-			reverseMultiline = false,
+			reverseGrowDir = false,
 		},
 		MultiBar6 = {
 			name = "MultiBar6",
@@ -76,7 +76,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = false,
-			reverseMultiline = false,
+			reverseGrowDir = false,
 		},
 		MultiBar7 = {
 			name = "MultiBar7",
@@ -86,7 +86,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = false,
-			reverseMultiline = false,
+			reverseGrowDir = false,
 		},
 		Stance = {
 			name = "StanceBar",
@@ -96,7 +96,7 @@ f.defaults = {
 			animType = BarAnimType.slideFromTop,
 			onHover = true,
 			onTarget = false,
-			reverseMultiline = false,
+			reverseGrowDir = false,
 		},
 	},
 }

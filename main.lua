@@ -44,7 +44,7 @@ function Init()
 		InitAnimations(bar)
 		OnScaleChanged(bar)
 		OnHideBorderChanged(bar)
-		OnReverseMultilineChanged(bar)
+		OnReverseGrowDirChanged(bar)
 	end
 end
 
@@ -231,24 +231,22 @@ function OnHideBorderChanged(bar)
 	end
 end
 
-function OnReverseMultilineChanged(bar)
-	-- if not bar.reverseMultiline then return end -- requires /reload
-	-- -- TODO only work for 2 lines 12 buttons bars atm.
-	-- -- Get BOTTOMLEFT anchor point y value
-	-- local _, _, _, _, y = _G[bar.name .. "ButtonContainer7"]:GetPoint(1)
-	-- print("y: " .. y)
-	-- for i = 1, 12 do
-	-- 	local button = _G[bar.buttonPrefix .. "Button" .. i]
-	-- 	if not button then break end
-	-- 	local buttonContainer = _G[bar.name .. "ButtonContainer" .. i]
-	-- 	if i <= 6 then
-	-- 		print("(i - 1) * y", (i - 1) * y)
-	-- 		buttonContainer:SetPoint("BOTTOMLEFT", (i - 1) * y, y)
-	-- 	else
-	-- 		print("(i - 1 - 6) * y", (i - 1 - 6) * y)
-	-- 		buttonContainer:SetPoint("BOTTOMLEFT", (i - 1 - 6) * y, 0)
-	-- 	end
-	-- end
+-- Reverse the buttons order by changing their parent container
+-- TODO works only for 2 rows of 6 buttons
+function OnReverseGrowDirChanged(bar)
+	for i = 1, 12 do
+		local button = _G[bar.buttonPrefix .. "Button" .. i]
+		if not button then return end
+		local toContainerIndex
+		if i <= 6 then
+			toContainerIndex = bar.reverseGrowDir and i + 6 or i
+		else
+			toContainerIndex = bar.reverseGrowDir and i - 6 or i
+		end
+		local toContainer = _G[bar.name .. "ButtonContainer" .. toContainerIndex]
+		button:ClearAllPoints()
+		button:SetPoint("CENTER", toContainer, "CENTER", 0, 0)
+	end
 end
 
 function ScaleAndCenter(button, scale)
