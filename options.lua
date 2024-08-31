@@ -102,18 +102,20 @@ f.defaults = {
 }
 
 function f:LoadSavedVars()
-	BetterActionBarsDB = f.defaults
+	-- BetterActionBarsDB is set by WoW if the file exists (see toc file).
+	BetterActionBarsDB = BetterActionBarsDB or {}
+	-- Set defaults for missing values (first load or new options added).
+	CopyMissingTableFields(f.defaults, BetterActionBarsDB)
 end
 
--- TODO settings panel
--- function f:LoadSavedVars()
--- 	-- BetterActionBarsDB is set by WoW if the file exists (see toc file).
--- 	BetterActionBarsDB = BetterActionBarsDB or {}
--- 	-- Set defaults for missing values (first load or new options added).
--- 	-- TODO recursive
--- 	for k, v in pairs(f.defaults) do
--- 		if BetterActionBarsDB[k] == nil then
--- 			BetterActionBarsDB[k] = v
--- 		end
--- 	end
--- end
+-- See FrameXML CopyTable (https://www.townlong-yak.com/framexml/live/Blizzard_SharedXMLBase/TableUtil.lua#218)
+function CopyMissingTableFields(copyFrom, copyTo)
+	for k, v in pairs(copyFrom) do
+		if type(v) == "table" then
+			copyTo[k] = copyTo[k] or {}
+			CopyMissingTableFields(v, copyTo[k])
+		else
+			copyTo[k] = copyTo[k] or v
+		end
+	end
+end
