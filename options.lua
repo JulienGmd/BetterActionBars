@@ -1,9 +1,9 @@
 BarAnimType = {
+	["none"] = "none",
 	["slideFromTop"] = "slideFromTop",
 	["slideFromBottom"] = "slideFromBottom",
 	["slideFromLeft"] = "slideFromLeft",
 	["slideFromRight"] = "slideFromRight",
-	["none"] = "none",
 }
 
 f.defaults = {

@@ -1,7 +1,9 @@
+# To know the version: /run print((select(4, GetBuildInfo())))
 ## Interface: 110002
-## Version: 0.1
+## Version: 1.0.0
 ## Title: BetterActionBars
-## Author: Me
+## Notes: Adds quality of life improvements to the default action bars.
+## Author: Widzo
 ## SavedVariables: BetterActionBarsDB
 
 main.lua
