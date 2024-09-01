@@ -6,5 +6,9 @@
 ## Author: Widzo
 ## SavedVariables: BetterActionBarsDB
 
+embeds.xml
+
 main.lua
 options.lua
+slashCommands.lua
+utils.lua
