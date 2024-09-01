@@ -4,6 +4,7 @@
 ## Title: BetterActionBars
 ## Notes: Adds quality of life improvements to the default action bars.
 ## Author: Widzo
+## IconTexture: Interface\AddOns\BetterActionBars\logo_small.jpg
 ## SavedVariables: BetterActionBarsDB
 
 embeds.xml
