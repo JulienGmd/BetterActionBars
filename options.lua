@@ -101,7 +101,7 @@ f.defaults = {
 	},
 }
 
-function f:LoadSavedVars()
+function LoadSavedVars()
 	-- BetterActionBarsDB is set by WoW if the file exists (see toc file).
 	BetterActionBarsDB = BetterActionBarsDB or {}
 	-- Set defaults for missing values (first load or new options added).
@@ -114,8 +114,8 @@ function CopyMissingTableFields(copyFrom, copyTo)
 		if type(v) == "table" then
 			copyTo[k] = copyTo[k] or {}
 			CopyMissingTableFields(v, copyTo[k])
-		else
-			copyTo[k] = copyTo[k] or v
+		elseif copyTo[k] == nil then
+			copyTo[k] = v
 		end
 	end
 end

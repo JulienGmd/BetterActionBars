@@ -16,7 +16,6 @@ f:HookScript("OnEvent", f.OnEvent)
 function f:ADDON_LOADED(event, addon)
 	if addon == ADDON_NAME then
 		f:UnregisterEvent("ADDON_LOADED")
-		f:LoadSavedVars()
 		Init()
 	end
 end
@@ -33,10 +32,8 @@ function f:PLAYER_TARGET_CHANGED(event)
 	end
 end
 
-
------ Utils --------------------------------------------------------------------
-
 function Init()
+	LoadSavedVars()
 	for _, bar in pairs(BetterActionBarsDB.actionBars) do
 		InitFade(bar)
 		InitAnimations(bar)
@@ -45,6 +42,9 @@ function Init()
 		OnReverseGrowDirChanged(bar)
 	end
 end
+
+
+----- Utils --------------------------------------------------------------------
 
 function InitFade(bar)
 
