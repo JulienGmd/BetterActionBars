@@ -149,6 +149,7 @@ function FadeOutAfterDelay(bar, delay)
 	if not barFrame and not barFrame:IsShown() then return end
 	bar.fadeOutTimer = BAB:ScheduleTimer(function()
 		UIFrameFadeOut(barFrame, .2, barFrame:GetAlpha(), 0)
+		bar.fadeOutTimer = nil
 	end, delay)
 end
 
