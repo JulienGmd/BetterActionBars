@@ -6,7 +6,7 @@ BAB = LibStub("AceAddon-3.0"):NewAddon(ADDON_NAME, "AceConsole-3.0", "AceEvent-3
 --#region -- Initialization ----------------------------------------------------
 
 function BAB:OnInitialize()
-	-- 3rd argument: use global profile
+	-- Load the saved variables (global profile), filling with defaults if needed
 	self.db = LibStub("AceDB-3.0"):New(DB_NAME, self.defaults, true)
 	for _, bar in pairs(self.db.global) do
 		OnScaleChanged(bar)
