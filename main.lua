@@ -11,9 +11,6 @@ function BAB:OnInitialize()
 	for _, bar in pairs(self.db.global) do
 		OnScaleChanged(bar)
 		OnHideBorderChanged(bar)
-		InitVisibility(bar)
-		OnShowOnHoverChanged(bar)
-		OnShowOnTargetChanged(bar)
 		OnReverseGrowDirChanged(bar)
 		InitAnimations(bar)
 		OnAnimTypeChanged(bar)
@@ -64,93 +61,6 @@ function OnHideBorderChanged(bar)
 		ScaleAndCenter(button.NewActionTexture, value)
 		ScaleAndCenter(button.PushedTexture, value)
 	end
-end
-
--- #endregion
-
-
---#region -- Show on hover / target --------------------------------------------
-
-function InitVisibility(bar)
-	bar.hovered = false
-	OnVisibilityChanged(bar)
-
-	for i = 1, 12 do
-		local button = _G[bar.buttonPrefix .. "Button" .. i]
-		if not button then return end
-		-- Note: It's seems that the OnLeave event is always triggered after
-		-- OnEnter, even if buttons overlap, so it's safe to set bar.hovered.
-		button:HookScript("OnEnter", function(self)
-			for _, bar in pairs(BAB.db.global) do
-				bar.hovered = true
-				OnVisibilityChanged(bar)
-			end
-		end)
-		button:HookScript("OnLeave", function(self)
-			for _, bar in pairs(BAB.db.global) do
-				bar.hovered = false
-				OnVisibilityChanged(bar)
-			end
-		end)
-	end
-end
-
-local hasTarget = false
-function BAB:PLAYER_TARGET_CHANGED()
-	if hasTarget == UnitExists("target") then return end
-	hasTarget = UnitExists("target")
-	for _, bar in pairs(self.db.global) do
-		OnVisibilityChanged(bar)
-	end
-end
-BAB:RegisterEvent("PLAYER_TARGET_CHANGED")
-
-function OnShowOnHoverChanged(bar)
-	OnVisibilityChanged(bar)
-end
-
-function OnShowOnTargetChanged(bar)
-	OnVisibilityChanged(bar)
-end
-
-function OnVisibilityChanged(bar)
-	local showLevel = GetShowLevel(bar)
-	if showLevel > 0 then
-		FadeIn(bar)
-	else
-		FadeOutAfterDelay(bar, 1)
-	end
-end
-
-function GetShowLevel(bar)
-	if not bar.showOnHover and not bar.showOnTarget then return 1 end
-	local showLevel = 0
-	showLevel = showLevel + (bar.showOnHover and bar.hovered and 1 or 0)
-	showLevel = showLevel + (bar.showOnTarget and UnitExists("target") and 1 or 0)
-	return showLevel
-end
-
-function FadeIn(bar)
-	if bar.fadeOutTimer then
-		BAB:CancelTimer(bar.fadeOutTimer)
-		bar.fadeOutTimer = nil
-	end
-	local barFrame = _G[bar.name]
-	if not barFrame and not barFrame:IsShown() then return end
-	UIFrameFadeIn(barFrame, .2, barFrame:GetAlpha(), 1)
-end
-
-function FadeOutAfterDelay(bar, delay)
-	if bar.fadeOutTimer then
-		BAB:CancelTimer(bar.fadeOutTimer)
-		bar.fadeOutTimer = nil
-	end
-	local barFrame = _G[bar.name]
-	if not barFrame and not barFrame:IsShown() then return end
-	bar.fadeOutTimer = BAB:ScheduleTimer(function()
-		UIFrameFadeOut(barFrame, .2, barFrame:GetAlpha(), 0)
-		bar.fadeOutTimer = nil
-	end, delay)
 end
 
 -- #endregion

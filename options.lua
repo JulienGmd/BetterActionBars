@@ -31,8 +31,6 @@ for _, v in pairs(barNames) do
 		buttonPrefix = "", -- set below
 		scale = 1,
 		hideBorder = false,
-		showOnHover = false,
-		showOnTarget = false,
 		reverseGrowDir = false,
 		animType = BarAnimType.none,
 	}
@@ -81,20 +79,6 @@ for _, v in pairs(barNames) do
 				desc = "Hide the border of the buttons",
 				get = function(info) return BAB.db.global[v].hideBorder end,
 				set = function(info, val) BAB.db.global[v].hideBorder = val; OnHideBorderChanged(BAB.db.global[v]) end,
-			},
-			showOnHover = {
-				type = "toggle",
-				name = "Show on Hover",
-				desc = "Show the bar on any bar hover",
-				get = function(info) return BAB.db.global[v].showOnHover end,
-				set = function(info, val) BAB.db.global[v].showOnHover = val; OnShowOnHoverChanged(BAB.db.global[v]) end,
-			},
-			showOnTarget = {
-				type = "toggle",
-				name = "Show on Target",
-				desc = "Show the bar on target",
-				get = function(info) return BAB.db.global[v].showOnTarget end,
-				set = function(info, val) BAB.db.global[v].showOnTarget = val; OnShowOnTargetChanged(BAB.db.global[v]) end,
 			},
 			reverseGrowDir = {
 				type = "toggle",
