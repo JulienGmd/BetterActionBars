@@ -31,6 +31,8 @@ for _, v in pairs(barNames) do
 		buttonPrefix = "", -- set below
 		scale = 1,
 		hideBorder = false,
+		hideShortcut = false,
+		hideMacroName = false,
 		reverseGrowDir = false,
 		animType = BarAnimType.none,
 	}
@@ -71,21 +73,45 @@ for _, v in pairs(barNames) do
 				max = 2,
 				step = 0.01,
 				get = function(info) return BAB.db.global[v].scale end,
-				set = function(info, val) BAB.db.global[v].scale = val; OnScaleChanged(BAB.db.global[v]) end,
+				set = function(info, val)
+					BAB.db.global[v].scale = val; OnScaleChanged(BAB.db.global[v])
+				end,
 			},
 			hideBorder = {
 				type = "toggle",
 				name = "Hide Border",
 				desc = "Hide the border of the buttons",
 				get = function(info) return BAB.db.global[v].hideBorder end,
-				set = function(info, val) BAB.db.global[v].hideBorder = val; OnHideBorderChanged(BAB.db.global[v]) end,
+				set = function(info, val)
+					BAB.db.global[v].hideBorder = val; OnHideBorderChanged(BAB.db.global[v])
+				end,
+			},
+			hideShortcut = {
+				type = "toggle",
+				name = "Hide Shortcut",
+				desc = "Hide the shortcut text on the buttons",
+				get = function(info) return BAB.db.global[v].hideShortcut end,
+				set = function(info, val)
+					BAB.db.global[v].hideShortcut = val; OnHideShortcutChanged(BAB.db.global[v])
+				end,
+			},
+			hideMacroName = {
+				type = "toggle",
+				name = "Hide Macro Name",
+				desc = "Hide the macro name on the buttons",
+				get = function(info) return BAB.db.global[v].hideMacroName end,
+				set = function(info, val)
+					BAB.db.global[v].hideMacroName = val; OnHideMacroNameChanged(BAB.db.global[v])
+				end,
 			},
 			reverseGrowDir = {
 				type = "toggle",
 				name = "Reverse Grow Direction",
 				desc = "Reverse the grow direction of the bar (only works for 2 rows of 6 buttons for now)",
 				get = function(info) return BAB.db.global[v].reverseGrowDir end,
-				set = function(info, val) BAB.db.global[v].reverseGrowDir = val; OnReverseGrowDirChanged(BAB.db.global[v]) end,
+				set = function(info, val)
+					BAB.db.global[v].reverseGrowDir = val; OnReverseGrowDirChanged(BAB.db.global[v])
+				end,
 			},
 			animType = {
 				type = "select",
@@ -99,7 +125,9 @@ for _, v in pairs(barNames) do
 					["slideFromRight"] = "Slide from right",
 				},
 				get = function(info) return BAB.db.global[v].animType end,
-				set = function(info, val) BAB.db.global[v].animType = val; OnAnimTypeChanged(BAB.db.global[v]) end,
+				set = function(info, val)
+					BAB.db.global[v].animType = val; OnAnimTypeChanged(BAB.db.global[v])
+				end,
 			},
 		},
 	}

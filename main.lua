@@ -11,6 +11,8 @@ function BAB:OnInitialize()
 	for _, bar in pairs(self.db.global) do
 		OnScaleChanged(bar)
 		OnHideBorderChanged(bar)
+		OnHideShortcutChanged(bar)
+		OnHideMacroNameChanged(bar)
 		OnReverseGrowDirChanged(bar)
 		InitAnimations(bar)
 		OnAnimTypeChanged(bar)
@@ -64,6 +66,32 @@ function OnHideBorderChanged(bar)
 end
 
 -- #endregion
+
+
+--#region -- Hide shortcut -----------------------------------------------------
+
+function OnHideShortcutChanged(bar)
+	for i = 1, 12 do
+		local button = _G[bar.buttonPrefix .. "Button" .. i]
+		if not button then return end
+		button.HotKey:SetAlpha(bar.hideShortcut and 0 or 1)
+	end
+end
+
+--#endregion
+
+
+--#region -- Hide macro name ---------------------------------------------------
+
+function OnHideMacroNameChanged(bar)
+	for i = 1, 12 do
+		local button = _G[bar.buttonPrefix .. "Button" .. i]
+		if not button then return end
+		button.Name:SetAlpha(bar.hideMacroName and 0 or 1)
+	end
+end
+
+--#endregion
 
 
 --#region -- Reverse grow direction --------------------------------------------
