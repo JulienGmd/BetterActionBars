@@ -154,14 +154,17 @@ function AnimateButton(bar, button, elapsed)
 	local cd = GetButtonCooldown(button)
 	if (cd > 1.5) then
 		button.cd = cd
+	elseif (cd == 0) then
+		button.cd = 0
 	else
 		-- If the cooldown is the gcd, manually decrease the cooldown to ignore it.
 		button.cd = button.cd - elapsed
-		if button.cd < 0 then
-			button.cd = 0
-			button.animate = false
-			return
-		end
+	end
+
+	if button.cd <= 0 then
+		button.cd = 0
+		button.animate = false
+		return
 	end
 
 	if button.cd > 5 then
