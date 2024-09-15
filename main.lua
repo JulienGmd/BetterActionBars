@@ -8,15 +8,19 @@ BAB = LibStub("AceAddon-3.0"):NewAddon(ADDON_NAME, "AceConsole-3.0", "AceEvent-3
 function BAB:OnInitialize()
 	-- Load the saved variables (global profile), filling with defaults if needed
 	self.db = LibStub("AceDB-3.0"):New(DB_NAME, self.defaults, true)
-	for _, bar in pairs(self.db.global) do
-		OnScaleChanged(bar)
-		OnHideBorderChanged(bar)
-		OnHideShortcutChanged(bar)
-		OnHideMacroNameChanged(bar)
-		OnReverseGrowDirChanged(bar)
-		InitAnimations(bar)
-		OnAnimTypeChanged(bar)
-	end
+
+	BAB:ScheduleTimer(function() -- Wait one frame to make this addon runs last
+		-- Initialize
+		for _, bar in pairs(self.db.global) do
+			OnScaleChanged(bar)
+			OnHideBorderChanged(bar)
+			OnHideShortcutChanged(bar)
+			OnHideMacroNameChanged(bar)
+			OnReverseGrowDirChanged(bar)
+			InitAnimations(bar)
+			OnAnimTypeChanged(bar)
+		end
+	end, 0)
 end
 
 -- #endregion
@@ -123,12 +127,12 @@ function InitAnimations(bar)
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
-		ResetAnimation(button)
+		ResetAnimation(bar, button)
 		button.cooldown:HookScript("OnUpdate", function(self, elapsed)
 			AnimateButton(bar, button, elapsed)
 		end)
 		button.cooldown:HookScript("OnHide", function(self)
-			ResetAnimation(button)
+			ResetAnimation(bar, button)
 		end)
 	end
 end
@@ -137,15 +141,15 @@ function OnAnimTypeChanged(bar)
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
-		ResetAnimation(button)
+		ResetAnimation(bar, button)
 	end
 end
 
-function ResetAnimation(button)
+function ResetAnimation(bar, button)
 	button.cd = 0
 	button.animate = false
 	SetButtonPosition(button, 0, 0)
-	SetShowButton(button, true)
+	SetShowButton(bar, button, true)
 end
 
 function AnimateButton(bar, button, elapsed)
@@ -173,7 +177,7 @@ function AnimateButton(bar, button, elapsed)
 
 	if button.animate then
 		if button.cd > 5 then
-			SetShowButton(button, false)
+			SetShowButton(bar, button, false)
 		else
 			local x = 0
 			local y = 0
@@ -191,7 +195,7 @@ function AnimateButton(bar, button, elapsed)
 				y = 0
 			end
 			SetButtonPosition(button, x, y)
-			SetShowButton(button, true)
+			SetShowButton(bar, button, true)
 		end
 	end
 end
@@ -204,7 +208,7 @@ function GetButtonCooldown(button)
 end
 
 -- Hide button components (keep the background visible)
-function SetShowButton(button, show)
+function SetShowButton(bar, button, show)
 	button.icon:SetAlpha(show and 1 or 0)
 	button.cooldown:SetAlpha(show and 1 or 0)
 	if button.chargeCooldown then
@@ -217,7 +221,7 @@ function SetShowButton(button, show)
 		button.Count:SetAlpha(show and 1 or 0)
 	end
 	if button.Name then
-		button.Name:SetAlpha(show and 1 or 0)
+		button.Name:SetAlpha(show and not bar.hideMacroName and 1 or 0)
 	end
 end
 
