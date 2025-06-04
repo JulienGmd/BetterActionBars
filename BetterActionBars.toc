@@ -1,9 +1,9 @@
 # To know the version: /run print((select(4, GetBuildInfo())))
-## Interface: 110005
-## Version: 1.0.0
+## Interface: 110105
+## Version: 1.0.1
 ## Title: BetterActionBars
 ## Notes: Adds quality of life improvements to the default action bars.
-## Author: Widzo
+## Author: Wdz
 ## IconTexture: Interface\AddOns\BetterActionBars\media\logo_small.jpg
 ## SavedVariables: BetterActionBarsDB
 
