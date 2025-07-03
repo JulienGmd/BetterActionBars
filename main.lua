@@ -156,6 +156,13 @@ function AnimateButton(bar, button, elapsed)
 	if bar.animType == BarAnimType.none then return end
 
 	local cd = GetButtonCooldown(button)
+
+	if button.cd > 0 and cd == 0 then
+		-- Proc detected: reset immediately
+		ResetAnimation(bar, button)
+		return
+	end
+
 	if (cd > 1.5) then
 		button.cd = cd
 	elseif (cd == 0) then
@@ -166,8 +173,7 @@ function AnimateButton(bar, button, elapsed)
 	end
 
 	if button.cd <= 0 then
-		button.cd = 0
-		button.animate = false
+		ResetAnimation(bar, button)
 		return
 	end
 
