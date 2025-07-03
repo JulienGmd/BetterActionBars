@@ -86,7 +86,8 @@ for _, v in pairs(barNames) do
 				step = 0.01,
 				get = function(info) return BAB.db.global[v].scale end,
 				set = function(info, val)
-					BAB.db.global[v].scale = val; OnScaleChanged(BAB.db.global[v])
+					BAB.db.global[v].scale = val;
+					OnScaleChanged(BAB.db.global[v])
 				end,
 			},
 			hideBorder = {
@@ -95,7 +96,8 @@ for _, v in pairs(barNames) do
 				desc = "Hide the border of the buttons",
 				get = function(info) return BAB.db.global[v].hideBorder end,
 				set = function(info, val)
-					BAB.db.global[v].hideBorder = val; OnHideBorderChanged(BAB.db.global[v])
+					BAB.db.global[v].hideBorder = val;
+					OnHideBorderChanged(BAB.db.global[v])
 				end,
 			},
 			hideShortcut = {
@@ -104,7 +106,8 @@ for _, v in pairs(barNames) do
 				desc = "Hide the shortcut text on the buttons",
 				get = function(info) return BAB.db.global[v].hideShortcut end,
 				set = function(info, val)
-					BAB.db.global[v].hideShortcut = val; OnHideShortcutChanged(BAB.db.global[v])
+					BAB.db.global[v].hideShortcut = val;
+					OnHideShortcutChanged(BAB.db.global[v])
 				end,
 			},
 			hideMacroName = {
@@ -113,7 +116,8 @@ for _, v in pairs(barNames) do
 				desc = "Hide the macro name on the buttons",
 				get = function(info) return BAB.db.global[v].hideMacroName end,
 				set = function(info, val)
-					BAB.db.global[v].hideMacroName = val; OnHideMacroNameChanged(BAB.db.global[v])
+					BAB.db.global[v].hideMacroName = val;
+					OnHideMacroNameChanged(BAB.db.global[v])
 				end,
 			},
 			reverseGrowDir = {
@@ -122,7 +126,8 @@ for _, v in pairs(barNames) do
 				desc = "Reverse the grow direction of the bar (only works for 2 rows of 6 buttons for now)",
 				get = function(info) return BAB.db.global[v].reverseGrowDir end,
 				set = function(info, val)
-					BAB.db.global[v].reverseGrowDir = val; OnReverseGrowDirChanged(BAB.db.global[v])
+					BAB.db.global[v].reverseGrowDir = val;
+					OnReverseGrowDirChanged(BAB.db.global[v])
 				end,
 			},
 			animType = {
@@ -138,7 +143,8 @@ for _, v in pairs(barNames) do
 				},
 				get = function(info) return BAB.db.global[v].animType end,
 				set = function(info, val)
-					BAB.db.global[v].animType = val; OnAnimTypeChanged(BAB.db.global[v])
+					BAB.db.global[v].animType = val;
+					OnAnimTypeChanged(BAB.db.global[v])
 				end,
 			},
 		},

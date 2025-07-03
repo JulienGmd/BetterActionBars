@@ -9,8 +9,15 @@ function BAB:OnInitialize()
 	-- Load the saved variables (global profile), filling with defaults if needed
 	self.db = LibStub("AceDB-3.0"):New(DB_NAME, self.defaults, true)
 
-	BAB:ScheduleTimer(function() -- Wait one frame to make this addon runs last
-		-- Initialize
+	local function InitializeAll()
+		if InCombatLockdown() then
+			BAB:RegisterEvent("PLAYER_REGEN_ENABLED", function()
+				BAB:UnregisterEvent("PLAYER_REGEN_ENABLED")
+				InitializeAll()
+			end)
+			return
+		end
+
 		for _, bar in pairs(self.db.global) do
 			OnScaleChanged(bar)
 			OnHideBorderChanged(bar)
@@ -20,7 +27,9 @@ function BAB:OnInitialize()
 			InitAnimations(bar)
 			OnAnimTypeChanged(bar)
 		end
-	end, 0)
+	end
+
+	BAB:ScheduleTimer(InitializeAll, 0) -- Wait one frame to make this addon runs last
 end
 
 -- #endregion
@@ -29,10 +38,19 @@ end
 --#region -- Scale -------------------------------------------------------------
 
 function OnScaleChanged(bar)
+	if InCombatLockdown() then
+		-- Wait for combat to end
+		BAB:RegisterEvent("PLAYER_REGEN_ENABLED", function()
+			BAB:UnregisterEvent("PLAYER_REGEN_ENABLED")
+			OnScaleChanged(bar)
+		end)
+		return
+	end
+
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
-		button:SetScale(bar.scale)
+			button:SetScale(bar.scale)
 	end
 end
 
@@ -42,6 +60,15 @@ end
 --#region -- Hide border -------------------------------------------------------
 
 function OnHideBorderChanged(bar)
+	if InCombatLockdown() then
+		-- Wait for combat to end
+		BAB:RegisterEvent("PLAYER_REGEN_ENABLED", function()
+			BAB:UnregisterEvent("PLAYER_REGEN_ENABLED")
+			OnHideBorderChanged(bar)
+		end)
+		return
+	end
+
 	function ScaleAndCenter(button, scale)
 		button:SetScale(scale)
 		button:ClearAllPoints()
@@ -103,6 +130,15 @@ end
 -- Reverse the buttons order by changing their parent container
 -- TODO works only for 2 rows of 6 buttons
 function OnReverseGrowDirChanged(bar)
+	if InCombatLockdown() then
+		-- Wait for combat to end
+		BAB:RegisterEvent("PLAYER_REGEN_ENABLED", function()
+			BAB:UnregisterEvent("PLAYER_REGEN_ENABLED")
+			OnReverseGrowDirChanged(bar)
+		end)
+		return
+	end
+
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
