@@ -18,6 +18,18 @@ local barNames = {
 	"StanceBar",
 }
 
+local barNamesToEditModeName = {
+	["MainMenuBar"] = "Action Bar 1",
+	["MultiBarBottomLeft"] = "Action Bar 2",
+	["MultiBarBottomRight"] = "Action Bar 3",
+	["MultiBarRight"] = "Action Bar 4",
+	["MultiBarLeft"] = "Action Bar 5",
+	["MultiBar5"] = "Action Bar 6",
+	["MultiBar6"] = "Action Bar 7",
+	["MultiBar7"] = "Action Bar 8",
+	["StanceBar"] = "Stance Bar",
+}
+
 
 --#region -- Defaults db values ------------------------------------------------
 
@@ -62,7 +74,7 @@ local options = {
 
 for _, v in pairs(barNames) do
 	options.args[v] = {
-		name = v,
+		name = barNamesToEditModeName[v] or v,
 		type = "group",
 		args = {
 			scale = {
