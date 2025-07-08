@@ -212,22 +212,22 @@ function AnimateButton(bar, button, elapsed)
 	end
 
 	if button.animate then
-		if button.cd > BAB.db.global.animDuration then
+		if button.cd > bar.animDuration then
 			SetShowButton(bar, button, false)
 		else
 			local x = 0
 			local y = 0
 			if bar.animType == BarAnimType.slideFromBottom then
 				x = 0
-				y = -button.cd / BAB.db.global.animDuration * 100
+				y = -button.cd / bar.animDuration * bar.animDistance
 			elseif bar.animType == BarAnimType.slideFromTop then
 				x = 0
-				y = button.cd / BAB.db.global.animDuration * 100
+				y = button.cd / bar.animDuration * bar.animDistance
 			elseif bar.animType == BarAnimType.slideFromLeft then
-				x = -button.cd / BAB.db.global.animDuration * 100
+				x = -button.cd / bar.animDuration * bar.animDistance
 				y = 0
 			elseif bar.animType == BarAnimType.slideFromRight then
-				x = button.cd / BAB.db.global.animDuration * 100
+				x = button.cd / bar.animDuration * bar.animDistance
 				y = 0
 			end
 			SetButtonPosition(button, x, y)
