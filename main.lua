@@ -18,7 +18,7 @@ function BAB:OnInitialize()
 			return
 		end
 
-		for _, bar in pairs(self.db.global) do
+		for _, bar in pairs(self.db.global.bars) do
 			OnScaleChanged(bar)
 			OnHideBorderChanged(bar)
 			OnHideShortcutChanged(bar)
@@ -50,7 +50,7 @@ function OnScaleChanged(bar)
 	for i = 1, 12 do
 		local button = _G[bar.buttonPrefix .. "Button" .. i]
 		if not button then return end
-			button:SetScale(bar.scale)
+		button:SetScale(bar.scale)
 	end
 end
 
@@ -193,12 +193,6 @@ function AnimateButton(bar, button, elapsed)
 
 	local cd = GetButtonCooldown(button)
 
-	if button.cd > 0 and cd == 0 then
-		-- Proc detected: reset immediately
-		ResetAnimation(bar, button)
-		return
-	end
-
 	if (cd > 1.5) then
 		button.cd = cd
 	elseif (cd == 0) then
@@ -218,22 +212,22 @@ function AnimateButton(bar, button, elapsed)
 	end
 
 	if button.animate then
-		if button.cd > 5 then
+		if button.cd > BAB.db.global.animDuration then
 			SetShowButton(bar, button, false)
 		else
 			local x = 0
 			local y = 0
 			if bar.animType == BarAnimType.slideFromBottom then
 				x = 0
-				y = -button.cd * 20
+				y = -button.cd / BAB.db.global.animDuration * 100
 			elseif bar.animType == BarAnimType.slideFromTop then
 				x = 0
-				y = button.cd * 20
+				y = button.cd / BAB.db.global.animDuration * 100
 			elseif bar.animType == BarAnimType.slideFromLeft then
-				x = -button.cd * 20
+				x = -button.cd / BAB.db.global.animDuration * 100
 				y = 0
 			elseif bar.animType == BarAnimType.slideFromRight then
-				x = button.cd * 20
+				x = button.cd / BAB.db.global.animDuration * 100
 				y = 0
 			end
 			SetButtonPosition(button, x, y)
